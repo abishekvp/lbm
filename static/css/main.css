@@ -1,0 +1,42 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+  
+.sign{
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* Custom alert colors */
+.alert-success {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .alert-danger {
+    background-color: #dc3545;
+    color: white;
+  }
+  
+  .alert-warning {
+    background-color: #ffc107;
+    color: black;
+  }
+  
+  .alert-info {
+    background-color: #17a2b8;
+    color: white;
+  }
+  
+  /* Custom styles for close button */
+  .alert .close {
+    color: white;
+    opacity: 0.7;
+  }
+  
+  .alert .close:hover {
+    opacity: 1;
+  }
+  
