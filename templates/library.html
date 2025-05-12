@@ -1,0 +1,48 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block title %}
+Dashboard
+{% endblock %}
+{% block main %}
+    <!-- BOF MAIN -->
+    <div class="main">
+
+        <!-- BOF Breadcrumb -->
+        <div class="row">
+            <div class="col">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="javascript:;"><i class="ti-home"></i> Library</a></li>
+                </ol>
+            </div>
+        </div>
+        <!-- EOF Breadcrumb -->
+
+        <div class="row">
+            <div type="button" class="col-md-3 col-sm-6" data-toggle="modal" data-target="#addLibraryModal">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="number-left">
+                            <h6 class="bold">Add Library</h6>
+                            <!-- <h3 class="card-title bold text-success"><i class=""></i>{{library.book_count}}</h3> -->
+                        </div>
+                        <div class="icon-right"><i class="fa fa-plus"></i></i></div>
+                    </div>
+                </div>
+            </div>
+            {% for library in libraries %}
+            <a class="col-md-3 col-sm-6" href="library/{{library.name}}">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="number-left">
+                            <h6 class="bold">{{library.name}}</h6>
+                            <h3 class="card-title bold text-success"><i class=""></i>{{library.book_count}}</h3>
+                        </div>
+                        <div class="icon-right"><i class="ti-layout-accordion-list"></i></div>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    <!-- EOF MAIN -->
+{% endblock %}

@@ -1,0 +1,207 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block title %}
+Dashboard
+{% endblock %}
+{% block head %}
+<style>
+    .input-group-text {
+        width: 120px; /* Adjust as needed */
+    }
+    #book-detail span {
+        color: snow;
+        border: 1px solid rgb(108, 108, 108);
+    }
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+</style>
+{% endblock %}
+{% block main %}
+    <!-- BOF MAIN -->
+    <div class="main">
+
+        <!-- BOF Breadcrumb -->
+        <div class="row">
+            <div class="col  d-flex justify-content-between">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/library"><i class="ti-home"></i> Library</a></li>
+                    <li class="breadcrumb-item"><a href="/library/{{library_name}}"> {{library_name}}</a></li>
+                    <li class="breadcrumb-item"><a href="/library/{{library_name}}/{{department_name}}"> {{department_name}}</a></li>
+                    <li class="breadcrumb-item"><a href="/library/{{library_name}}/{{department_name}}/{{rack_name}}"> {{rack_name}}</a></li>
+                </ol>
+                <a href="/delete/{{library_name}}/{{department_name}}/{{rack_name}}/{{book.id}}"><button type="button" class="btn btn-flat mb-1 btn-outline-danger"><i class="ti-trash"></i> Delete</button></a>
+            </div>
+        </div>
+        <!-- EOF Breadcrumb -->
+
+        <div class="row">
+            <div class="col-md-6" id="book-detail">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-center align-items-center">
+                            <figure class="image m-0">
+                                <img src="{{ book.base64_image }}" alt="{{ book.name }}"/>
+                            </figure>
+                        </div>
+                        <div class="card-body" id="book-data">
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">BOOK</span>
+                                </div>
+                                <span class="form-control">{{ book.name }}</span>
+                                <div class="input-group-append">
+                                    <a href="{% url 'download-file' book.file.id %}"><button type="button" class="btn btn-carolina"><i class="ti-import"></i></button></a>
+                                </div>
+                            </div>
+
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">AUTHOR</span>
+                                </div>
+                                <span class="form-control">{{ book.author }}</span>
+                            </div>
+
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">PUBLICATION</span>
+                                </div>
+                                <span class="form-control">{{ book.publication }}</span>
+                            </div>
+
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">RELEASED ON</span>
+                                </div>
+                                <span class="form-control">{{ book.release }}</span>
+                            </div>
+
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">LIBRARY</span>
+                                </div>
+                                <span class="form-control">{{ library_name }}</span>
+                            </div>
+
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">DEPARTMENT</span>
+                                </div>
+                                <span class="form-control">{{ department_name }}</span>
+                            </div>
+
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">RACK</span>
+                                </div>
+                                <span class="form-control">{{ rack_name }}</span>
+                            </div>
+
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">UPLOADED</span>
+                                </div>
+                                <span class="form-control">{{ book.uploaded }}</span>
+                            </div>
+
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">LAST UPDATED</span>
+                                </div>
+                                <span class="form-control">{{ book.updated }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6" id="book-detail">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-around">
+                            <a href="/edit/{{library_name}}/{{department_name}}/{{rack_name}}/{{book.id}}"><button type="button" class="btn btn-flat mb-1 btn-outline-primary"><i class="fas fa-refresh"></i> Update</button></a>
+                            <a href="/delete/{{library_name}}/{{department_name}}/{{rack_name}}/{{book.id}}"><button type="button" class="btn btn-flat mb-1 btn-outline-danger"><i class="ti-trash"></i> Delete</button></a>
+                            <a href="{% url 'download-file' book.file.id %}"><button type="button" class="btn btn-flat mb-1 btn-outline-info"><i class="ti-import"></i> Book</button></a>
+                        </div>
+                    </div>
+                    <div class="card-body" id="book-form">
+                        <div class="input-group mb-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">BOOK</span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="{{ book.name }}">
+                        </div>
+
+                        <div class="input-group mb-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">AUTHOR</span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="{{ book.author }}">
+                        </div>
+
+                        <div class="input-group mb-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">PUBLICATION</span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="{{ book.publication }}">
+                        </div>
+
+                        <div class="input-group mb-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">RELEASED ON</span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="{{ book.release }}">
+                        </div>
+
+                        <div class="input-group mb-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">LIBRARY</span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="{{ library_name }}">
+                        </div>
+
+                        <div class="input-group mb-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">DEPARTMENT</span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="{{ department_name }}">
+                        </div>
+
+                        <div class="input-group mb-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">RACK</span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="{{ rack_name }}">
+                        </div>
+
+                        <div class="input-group mb-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">UPLOADED</span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="{{ book.uploaded }}">
+                        </div>
+
+                        <div class="input-group mb-2">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">LAST UPDATED</span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="{{ book.updated }}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- EOF MAIN -->
+{% endblock %}
+{% block script %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var bookForm = document.getElementById('book-form');
+        if (bookForm) {
+            bookForm.style.display = 'none';
+        }
+    });
+</script>
+{% endblock %}

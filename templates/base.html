@@ -1,0 +1,280 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+        <meta name="viewport" content="width=device-width" />
+
+        <!-- Title -->
+        <title>LBM - {% block title %}{% endblock %}</title>
+        
+        <!-- Icon -->
+        <link rel="apple-touch-icon" sizes="76x76" href="{% static 'assets/img/logo.png' %}">
+        <link rel="icon" type="image/png" sizes="96x96" href="{% static 'assets/img/logo.png' %}">
+        
+        <!-- Styles -->
+        <link rel="stylesheet" href="{% static 'assets/css/siqtheme.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/css/pages/dashboard.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/css/pages/cp_datetime.css' %}">
+        <link rel="stylesheet" href="{% static 'assets/vendors/bootstrap4-toggle/bootstrap4-toggle.min.css' %}">
+
+        <!-- Icons Support -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="{% static 'themify-icons/themify-icons.css' %}">
+        <link rel="stylesheet" href="{% static 'themify-icons/ie7/ie7.css' %}">
+        {% block head %}{% endblock %}
+    </head>
+    <body class="theme-dark">
+        <!-- Message -->
+
+
+        <!-- Main -->
+        {% block index %}
+        {% endblock %}
+
+        <!-- Add Library -->
+        <div class="modal fade" id="addLibraryModal" tabindex="-1" role="dialog" aria-labelledby="addLibraryModalTitle" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addLibraryModalTitle">Add Library</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="card mb-3">
+                                    <form role="form" method="post" id="libraryForm">
+                                        {% csrf_token %}
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                                <label>Library Name</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text">LB-</span>
+                                                    </div>
+                                                    <input type="text" name="library-name" id="library-name" class="form-control" placeholder="Library name">
+                                                </div>
+                                            </div>
+                                            <div id="libraryFormResponse" class="mt-2"></div>
+                                        </div>
+                                        <div class="card-footer text-right">
+                                            <button type="submit" class="btn btn-flat btn-primary"><i class="ti-face-smile"></i> Submit</button>
+                                            <a class="btn btn-flat btn-secondary" data-dismiss="modal"><i class="ti-face-sad"></i> Cancel</a>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-outline-primary">Save changes</button>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Department -->
+        <div class="modal fade" id="addDepartmentModal" tabindex="-1" role="dialog" aria-labelledby="addDepartmentModalTitle" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addDepartmentModalTitle">Add Department</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="card mb-3">
+                                    <form role="form" method="post">
+                                        {% csrf_token %}
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                                <label>Department Name</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text">RK-</span>
+                                                    </div>
+                                                    <input type="text" name="department-name" id="department-name" class="form-control" placeholder="Department name">
+                                                </div>
+                                            </div>
+                                            <div id="FormResponse" class="mt-2"></div>
+                                        </div>
+                                        <div class="card-footer text-right">
+                                            <button type="submit" class="btn btn-flat btn-primary"><i class="ti-face-smile"></i> Submit</button>
+                                            <a class="btn btn-flat btn-secondary" data-dismiss="modal"><i class="ti-face-sad"></i> Cancel</a>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-outline-primary">Save changes</button>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Rack -->
+        <div class="modal fade" id="addRackModal" tabindex="-1" role="dialog" aria-labelledby="addRackModalTitle" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addRackModalTitle">Add Rack</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="card mb-3">
+                                    <form role="form" method="post" id="libraryForm" onsubmit="addRack()">
+                                        {% csrf_token %}
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                                <label>Rack Name</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text">RK-</span>
+                                                    </div>
+                                                    <input type="text" name="rack-name" id="rack-name" class="form-control" placeholder="Rack name">
+                                                </div>
+                                            </div>
+                                            <div id="rackFormResponse" class="mt-2"></div>
+                                        </div>
+                                        <div class="card-footer text-right">
+                                            <button type="submit" class="btn btn-flat btn-primary" onclick="addRack()"><i class="ti-face-smile"></i> Submit</button>
+                                            <a class="btn btn-flat btn-secondary" data-dismiss="modal"><i class="ti-face-sad"></i> Cancel</a>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-outline-primary">Save changes</button>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Book -->
+        <div class="modal fade" id="addBookModal" tabindex="-1" role="dialog" aria-labelledby="addBookModalTitle" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addBookModalTitle">Add Book</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="card mb-3">
+                                    <form role="form" method="post" id="libraryForm" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                                <label>Book Name</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text">BOOK-</span>
+                                                    </div>
+                                                    <input type="text" name="book-name" id="book-name" class="form-control" placeholder="Book name">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Author</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text bg-carolina"><i class="ti-user text-light"></i></span>
+                                                    </div>
+                                                    <input type="text" name="author-name" id="author-name" class="form-control" placeholder="Author name">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Publication</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text bg-carolina"><i class="ti-agenda text-light"></i></span>
+                                                    </div>
+                                                    <input type="text" name="publication-name" id="publication-name" class="form-control" placeholder="Publication name">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Release</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text bg-carolina"><i class="ti-calendar text-light"></i></span>
+                                                    </div>
+                                                    <input type="date" name="release-date" id="release-date" class="form-control" placeholder="Release date">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">Choose</span>
+                                                    </div>
+                                                    <div class="custom-file">
+                                                        <input type="file" name="book-file" id="book-file" class="custom-file-input" accept="application/pdf">
+                                                        <label class="custom-file-label">book file</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">Choose</span>
+                                                    </div>
+                                                    <div class="custom-file">
+                                                        <input type="file" name="book-image" id="book-image" class="custom-file-input" accept="image/*">
+                                                        <label class="custom-file-label">book image</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="FormResponse" class="mt-2"></div>
+                                        </div>
+                                        <div class="card-footer text-right">
+                                            <button type="submit" class="btn btn-flat btn-primary"><i class="ti-face-smile"></i> Submit</button>
+                                            <a class="btn btn-flat btn-secondary" data-dismiss="modal"><i class="ti-face-sad"></i> Cancel</a>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-outline-primary">Save changes</button>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Imports -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+        <script src="{% static 'assets/scripts/siqtheme.js' %}"></script>
+        <!-- <script src="{% static 'assets/scripts/pages/dashboard.js' %}"></script> -->
+        <script src="{% static 'assets/scripts/pages/ui_card.js' %}"></script>
+        <script src="{% static 'assets/scripts/pages/ui_modal.js' %}"></script>
+        <script src="{% static 'assets/scripts/pages/ui_toastr.js' %}"></script>
+        <!-- <script src="{% static 'assets/scripts/pages/fm_control.js' %}"></script> -->
+        <script src="{% static 'assets/scripts/pages/tb_datatables.js' %}"></script>
+        <script src="{% static 'assets/scripts/pages/pg_login.js' %}"></script>
+        <script src="{% static 'js/main.js' %}"></script>
+        {% block script %}{% endblock %}
+    </body>
+</html>
