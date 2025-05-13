@@ -24,16 +24,15 @@ Dashboard
                     <div class="card-body">
                         <div class="icon-left text-secondary"><i class="ti-bar-chart"></i></div>
                         <div class="number-right text-right">
-                            <h6 class="bold text-secondary">Monthly Goal</h6>
-                            <h3 class="card-title text-warning bold">$74,502</h3>
+                            <h6 class="bold text-secondary">Total Books</h6>
+                            <h3 class="card-title text-warning bold">{{total_books}}</h3>
                         </div>
                         <div class="progress progress-bar-sm">
-                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar" style="width: 75%" aria-valuenow="75"
-                                aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar" style="width: 75%" aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                         <div class="progress-text text-secondary">
-                            <span class="float-left"><small>$0</small></span>
-                            <span class="float-right"><small>$100,000</small></span>
+                            <span class="float-left"><small>Accessed Books</small></span>
+                            <span class="float-right"><small>{{total_books}}</small></span>
                         </div>
                     </div>
                 </div>
@@ -43,15 +42,16 @@ Dashboard
                     <div class="card-body">
                         <div class="icon-left text-secondary"><i class="ti-receipt"></i></div>
                         <div class="number-right text-right">
-                            <h6 class="bold text-secondary">Monthly Orders</h6>
-                            <h3 class="card-title text-primary bold">9,432</h3>
+                            <h6 class="bold text-secondary">Total Racks</h6>
+                            <h3 class="card-title text-primary bold">{{total_racks}}</h3>
                         </div>
                         <div class="progress progress-bar-sm">
                             <div class="progress-bar bg-primary" role="progressbar" style="width: 100%" aria-valuenow="100"
                                 aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                         <div class="progress-text text-secondary">
-                            <span class="float-left"><small>Total Monthly Orders</small></span>
+                            <span class="float-left"><small>Accessed Racks</small></span>
+                            <span class="float-right"><small>{{total_racks}}</small></span>
                         </div>
                     </div>
                 </div>
@@ -61,16 +61,16 @@ Dashboard
                     <div class="card-body">
                         <div class="icon-left text-secondary"><i class="ti-wallet"></i></div>
                         <div class="number-right text-right">
-                            <h6 class="bold text-secondary">Monthly Expenses</h6>
-                            <h3 class="card-title text-bubblegum bold">$2,942</h3>
+                            <h6 class="bold text-secondary">Total Department</h6>
+                            <h3 class="card-title text-bubblegum bold">{{total_department}}</h3>
                         </div>
                         <div class="progress progress-bar-sm">
                             <div class="progress-bar progress-bar-striped progress-bar-animated bg-bubblegum" role="progressbar" style="width: 30%" aria-valuenow="30"
                                 aria-valuemin="0" aria-valuemax="100"></div>
                         </div>
                         <div class="progress-text text-secondary">
-                            <span class="float-left"><small>0%</small></span>
-                            <span class="float-right"><small>100%</small></span>
+                            <span class="float-left"><small>Accessed Department</small></span>
+                            <span class="float-right"><small>{{total_department}}</small></span>
                         </div>
                     </div>
                 </div>

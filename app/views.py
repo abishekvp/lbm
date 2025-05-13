@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.http import JsonResponse
 from app import models as md
 from app import constants as const
+from django.utils import timezone
 
 def index(request):
     if request.user.is_authenticated:return redirect("dashboard")
@@ -13,7 +14,15 @@ def index(request):
 
 def dashboard(request):
     if request.user.is_authenticated:
-        return render(request,'dashboard.html')
+        data = dict()
+        data['total_books'] = md.Book.objects.count()
+        data['total_racks'] = md.Rack.objects.count()
+        data['total_department'] = md.Department.objects.count()
+        data['total_library'] = md.Library.objects.count()
+        today = timezone.now().date()
+        data['today_updated_books'] = md.Book.objects.filter(updated__date=today)
+        data['last_updated_books'] = md.Book.objects.order_by('-updated')[:3]
+        return render(request,'dashboard.html', data)
     else:
         return redirect('signin')
 
