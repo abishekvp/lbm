@@ -263,6 +263,138 @@
             </div>
         </div>
 
+        <!-- Add Book -->
+        <div class="modal fade" id="addBookModal_2" tabindex="-1" role="dialog" aria-labelledby="addBookModalTitle" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addBookModalTitle">Add Book</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="card mb-3">
+                                    <form role="form" method="post" id="libraryForm" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                                <label>Book Name</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text">BOOK-</span>
+                                                    </div>
+                                                    <input type="text" name="book-name" id="book-name" class="form-control" placeholder="Book name">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Author</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text bg-carolina"><i class="ti-user text-light"></i></span>
+                                                    </div>
+                                                    <input type="text" name="author-name" id="author-name" class="form-control" placeholder="Author name">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Publication</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text bg-carolina"><i class="ti-agenda text-light"></i></span>
+                                                    </div>
+                                                    <input type="text" name="publication-name" id="publication-name" class="form-control" placeholder="Publication name">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Release</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text bg-carolina"><i class="ti-calendar text-light"></i></span>
+                                                    </div>
+                                                    <input type="date" name="release-date" id="release-date" class="form-control" placeholder="Release date">
+                                                </div>
+                                            </div>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <label class="input-group-text bg-carolina">Library</label>
+                                                    <span class="input-group-text bg-carolina"><i class="ti-book text-light"></i></span>
+                                                </div>
+                                                <select class="custom-select" name="library_name" id="library_name">
+                                                    <option value="{{book.rack.department.library.id}}" selected disabled>{{book.rack.department.library.name}}</option>
+                                                    <!-- {% for library in librarys %}
+                                                        <option value="{{library.name}}">{{library.name}}</option>
+                                                    {% endfor %} -->
+                                                </select>
+                                            </div>
+
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <label class="input-group-text bg-carolina">Department</label>
+                                                    <span class="input-group-text bg-carolina"><i class="ti-layout-grid2 text-light"></i></span>
+                                                </div>
+                                                <select class="custom-select" name="department_name" id="department_name">
+                                                    <option value="{{book.rack.department.id}}" selected disabled>{{book.rack.department.name}}</option>
+                                                    <!-- {% for department in departments %}
+                                                        <option value="{{department.name}}">{{department.name}}</option>
+                                                    {% endfor %} -->
+                                                </select>
+                                            </div>
+
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <label class="input-group-text bg-carolina">Rack</label>
+                                                    <span class="input-group-text bg-carolina"><i class="ti-layers text-light"></i></span>
+                                                </div>
+                                                <select class="custom-select" name="rack_name" id="rack_name">
+                                                    <option value="{{book.rack.id}}" selected disabled>{{book.rack.name}}</option>
+                                                    <!-- {% for rack in racks %}
+                                                        <option value="{{rack.name}}">{{rack.name}}</option>
+                                                    {% endfor %} -->
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">Choose</span>
+                                                    </div>
+                                                    <div class="custom-file">
+                                                        <input type="file" name="book-file" id="book-file" class="custom-file-input" accept="application/pdf">
+                                                        <label class="custom-file-label">Book File</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">Choose</span>
+                                                    </div>
+                                                    <div class="custom-file">
+                                                        <input type="file" name="book-image" id="book-image" class="custom-file-input" accept="image/*">
+                                                        <label class="custom-file-label">Book Image</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div id="FormResponse" class="mt-2"></div>
+                                        </div>
+                                        <div class="card-footer text-right">
+                                            <button type="submit" class="btn btn-flat btn-primary"><i class="ti-face-smile"></i> Submit</button>
+                                            <a class="btn btn-flat btn-secondary" data-dismiss="modal"><i class="ti-face-sad"></i> Cancel</a>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-outline-primary">Save changes</button>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+
         <!-- Imports -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 

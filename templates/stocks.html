@@ -1,0 +1,52 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block title %}
+Stocks
+{% endblock %}
+{% block main %}
+    <!-- BOF MAIN -->
+    <div class="main">
+
+        <!-- BOF Breadcrumb -->
+        <div class="row">
+            <div class="col  d-flex justify-content-between">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/stock"><i class="fas fa-boxes"></i> Stocks</a></li>
+                </ol>
+                <div>
+                    <a href="/edit-library/{{library_name}}/{{department_name}}/{{rack_name}}"><button type="button" class="btn btn-flat mb-1 btn-outline-info"><i class="fas fa-pencil-square-o"></i> Edit</button></a>
+                    <a href="/delete/{{library_name}}/{{department_name}}/{{rack_name}}"><button type="button" class="btn btn-flat mb-1 btn-outline-danger"><i class="ti-trash"></i> Delete</button></a>
+                </div>
+            </div>
+        </div>
+        <!-- EOF Breadcrumb -->
+
+        <div class="row">
+            <div type="button" class="col-md-3 col-sm-6" data-toggle="modal" data-target="#addBookModal">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="number-left">
+                            <h6 class="bold">Add Book</h6>
+                            <!-- <h3 class="card-title bold text-success"><i class=""></i>{{rack.book_count}}</h3> -->
+                        </div>
+                        <div class="icon-right"><i class="fa fa-plus"></i></i></div>
+                    </div>
+                </div>
+            </div>
+            {% for book in books %}
+            <a class="col-md-3 col-sm-6" href="/library/{{library_name}}/{{department_name}}/{{rack_name}}/{{book.id}}">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="number-left">
+                            <h6 class="bold">{{book.name}}</h6>
+                            <!-- <h3 class="card-title bold text-success"><i class=""></i>{{rack.book_count}}</h3> -->
+                        </div>
+                        <div class="icon-right"><i class="fas fa-book"></i></div>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    <!-- EOF MAIN -->
+{% endblock %}

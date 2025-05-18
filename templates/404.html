@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>404 Not Found</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #232526 0%, #414345 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            color: #fff;
+            overflow: hidden;
+        }
+        .container {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+        .glow {
+            font-size: 8rem;
+            font-weight: bold;
+            letter-spacing: 10px;
+            color: #fff;
+            text-shadow:
+                0 0 20px #00e6ff,
+                0 0 40px #00e6ff,
+                0 0 60px #00e6ff,
+                0 0 80px #00e6ff;
+            animation: flicker 2s infinite alternate;
+        }
+        @keyframes flicker {
+            0% { opacity: 1; }
+            45% { opacity: 0.8; }
+            55% { opacity: 1; }
+            100% { opacity: 0.95; }
+        }
+        .message {
+            font-size: 2rem;
+            margin: 20px 0 30px 0;
+            color: #b2fefa;
+            text-shadow: 0 0 10px #00e6ff;
+        }
+        .home-btn {
+            display: inline-block;
+            padding: 14px 36px;
+            background: linear-gradient(90deg, #00e6ff 0%, #b2fefa 100%);
+            color: #232526;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 30px;
+            text-decoration: none;
+            box-shadow: 0 4px 30px rgba(0,230,255,0.2);
+            transition: background 0.3s, color 0.3s, transform 0.2s;
+        }
+        .home-btn:hover {
+            background: linear-gradient(90deg, #b2fefa 0%, #00e6ff 100%);
+            color: #232526;
+            transform: scale(1.05);
+        }
+        .background-circles {
+            position: absolute;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.15;
+            background: radial-gradient(circle, #00e6ff 0%, #232526 80%);
+            animation: float 10s infinite alternate;
+        }
+        .circle1 { width: 400px; height: 400px; top: 10%; left: 5%; animation-delay: 0s;}
+        .circle2 { width: 300px; height: 300px; bottom: 15%; right: 10%; animation-delay: 2s;}
+        .circle3 { width: 200px; height: 200px; top: 60%; left: 60%; animation-delay: 4s;}
+        @keyframes float {
+            0% { transform: translateY(0) scale(1);}
+            100% { transform: translateY(-30px) scale(1.1);}
+        }
+        @media (max-width: 600px) {
+            .glow { font-size: 4rem; }
+            .message { font-size: 1.2rem; }
+            .circle1, .circle2, .circle3 { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-circles">
+        <div class="circle circle1"></div>
+        <div class="circle circle2"></div>
+        <div class="circle circle3"></div>
+    </div>
+    <div class="container">
+        <div class="glow">404</div>
+        <div class="message">Oops! The page you're looking for doesn't exist.</div>
+        <a href="/" class="home-btn">Go Home</a>
+    </div>
+</body>
+</html>

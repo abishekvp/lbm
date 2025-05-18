@@ -8,6 +8,31 @@ class Profile(models.Model):
     phone = models.CharField(max_length=15)
     image = models.TextField()
 
+class Stock(models.Model):
+    name = models.CharField(max_length=64)
+    quantity = models.IntegerField()
+    is_available = models.BooleanField(default=True)
+    isbn = models.CharField(max_length=13, null=True)
+    author = models.CharField(max_length=128, null=True)
+    publication = models.CharField(max_length=256, null=True)
+    release = models.DateField(null=True)
+    updated = models.DateTimeField(auto_now=True)
+    uploaded = models.DateTimeField(auto_now_add=True)
+    image = models.ForeignKey('Image', on_delete=models.PROTECT, null=True)
+
+class Ledger(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    book = models.ForeignKey(Stock, on_delete=models.CASCADE)
+    checkout_date = models.DateTimeField(auto_now_add=True)
+    approved_date = models.DateTimeField(null=True)
+    rejected_date = models.DateTimeField(null=True)
+    checkin_date = models.DateTimeField(null=True)
+    is_checked_out = models.BooleanField(default=True)
+    is_checked_in = models.BooleanField(default=False)
+    is_approved = models.BooleanField(default=False)
+    is_rejected = models.BooleanField(default=False)
+    is_pending = models.BooleanField(default=True)
+
 class Library(models.Model):
     name = models.CharField(max_length=64)
 

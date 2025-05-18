@@ -1,5 +1,8 @@
 {
     "editor.codeActionWidget.includeNearbyQuickFixes": true,
     "editor.codeLens": false,
-    "editor.defaultFormatter": "MikeBovenlander.formate"
+    "editor.defaultFormatter": "MikeBovenlander.formate",
+    "[css]": {
+        "editor.defaultFormatter": "vscode.css-language-features"
+    }
 }

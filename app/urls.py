@@ -12,6 +12,8 @@ urlpatterns = [
     path('signin', views.signin, name="signin"),
     path('signout', views.signout, name="signout"),
     
+    path('update-profile', views.update_profile, name="update-profile"),
+
     # functional
     path('library', views.library, name="library"),
     path('library/<str:lb>', views.library, name="library"),
@@ -19,14 +21,23 @@ urlpatterns = [
     path('library/<str:lb>/<str:dept>/<str:rack>', views.library, name="library"),
     path('library/<str:lb>/<str:dept>/<str:rack>/<int:book>', views.library, name="library"),
 
-    path('download/<int:file_id>/', views.download_file, name='download-file'),
+    path('library-meta', views.library_meta, name="library-meta"),
 
-    # path('edit-library', views.edit_library, name="edit-library"),
-    # path('edit-library/<str:lb>', views.edit_library, name="edit-library"),
-    # path('edit-library/<str:lb>/<str:dept>', views.edit_library, name="edit-library"),
-    # path('edit-library/<str:lb>/<str:dept>/<str:rack>', views.edit_library, name="edit-library"),
-    # path('edit-library/<str:lb>/<str:dept>/<str:rack>/<int:book>', views.edit_library, name="edit-library"),
+    path('search-books', views.search_books, name='search-books'),
+    path('download/<int:file_id>', views.download_file, name='download-file'),
 
+    path('books', views.books, name='books'),
+    path('view-book/<int:book_id>', views.view_book),
+
+    path('racks', views.racks, name='racks'),
+
+    path('stocks', views.stocks, name='stocks'),
+
+    path('edit-library', views.edit_library, name="edit-library"),
+    path('edit-library/<str:lb>', views.edit_library, name="edit-library"),
+    path('edit-library/<str:lb>/<str:dept>', views.edit_library, name="edit-library"),
+    path('edit-library/<str:lb>/<str:dept>/<str:rack>', views.edit_library, name="edit-library"),
+    path('edit-library/<str:lb>/<str:dept>/<str:rack>/<int:book>', views.edit_library, name="edit-library"),
 
     path('delete/<str:lb>', views.delete),
     path('delete/<str:lb>/<str:dept>', views.delete),
@@ -53,4 +64,8 @@ urlpatterns = [
     path('fm_ckeditor_document', views.fm_ckeditor_document, name='fm_ckeditor_document'),
     path('ch_apexcharts', views.ch_apexcharts, name='ch_apexcharts'),
     path('pg_login', views.pg_login, name='pg_login'),
+
+    # error pages
+    path('404', views.error_404, name='error_404'),
+    path('500', views.error_500, name='error_500'),
 ]
