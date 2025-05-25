@@ -10,12 +10,33 @@ from django.utils import timezone
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 import base64
+from django.contrib.auth.models import Group
 
 def index(request):
-    if request.user.is_authenticated:return redirect("dashboard")
-    else:return redirect('signin')
+    if request.user.is_authenticated:
+        if request.user.groups.filter(name='student').exists():
+            return redirect('/student')
+        return redirect("/dashboard")
+    else: return redirect('/signin')
+
+def student_required(view_func):
+    @login_required
+    def _wrapped_view(request, *args, **kwargs):
+        if not request.user.groups.filter(name='student').exists():
+            return redirect('/index')
+        return view_func(request, *args, **kwargs)
+    return _wrapped_view
+
+def admin_required(view_func):
+    @login_required
+    def _wrapped_view(request, *args, **kwargs):
+        if not request.user.groups.filter(name='admin').exists():
+            return redirect('/student')
+        return view_func(request, *args, **kwargs)
+    return _wrapped_view
 
 @login_required
+@admin_required
 def dashboard(request):
     data = dict()
     data['total_books'] = md.Book.objects.count()
@@ -27,6 +48,8 @@ def dashboard(request):
     data['last_updated_books'] = md.Book.objects.order_by('-updated')[:3]
     return render(request,'dashboard.html', data)
 
+@login_required
+@admin_required
 def stocks(request):
     data = dict()
     data['total_books'] = md.Book.objects.count()
@@ -40,6 +63,7 @@ def stocks(request):
 
 # functional units
 @login_required
+@admin_required
 def search_books(request):
     query_string = str(request.GET.get('query')).strip()
     books = md.Book.objects.filter(
@@ -71,6 +95,7 @@ def search_books(request):
     return JsonResponse({'status': 200, 'books': books_list})
 
 @login_required
+@admin_required
 def library(request, lb=None, dept=None, rack=None, book=None):
     if lb:
         if dept:
@@ -154,48 +179,51 @@ def library(request, lb=None, dept=None, rack=None, book=None):
             if request.method == const.POST:
                 rack_name = str(request.POST.get('rack-name')).strip()
                 if not rack_name.isalpha():
-                    return JsonResponse({'status': 403, 'message': 'Rack name must contain only alphabetic characters'})
+                    messages.warning(request, 'Rack name must contain only alphabetic characters')
                 rack_name = "RK-" + rack_name.upper().replace(' ', '-')
                 if md.Rack.objects.filter(department__library__name=lb, department__name=dept, name=rack_name).exists():
-                    return JsonResponse({'status': 403, 'message': 'Rack already exists!'})
-                if rack_name:
+                    messages.warning(request, 'Rack already exists!')
+                elif rack_name:
                     department = md.Department.objects.get(name=dept, library__name=lb)
                     md.Rack.objects.create(name=rack_name, department=department)
                 else:
-                    return JsonResponse({'status': 403, 'message': 'Unable to create rack!'})
+                    messages.error(request, 'Unable to create rack!')
             racks = md.Rack.objects.filter(department__library__name=lb, department__name=dept)
-            return render(request, 'rack.html', {'racks': racks, 'library_name': lb, 'department_name': dept})
+            return_data = render(request, 'rack.html', {'racks': racks, 'library_name': lb, 'department_name': dept})
+            return return_data
         
         if request.method == const.POST:
             department_name = str(request.POST.get('department-name')).strip()
             if not department_name.isalpha():
-                return JsonResponse({'status': 403, 'message': 'Department name must contain only alphabetic characters'})
+                messages.warning(request, 'Department name must contain only alphabetic characters')
             department_name = "DEPT-" + department_name.upper().replace(' ', '-')
             if md.Department.objects.filter(name=department_name, library__name=lb).exists():
-                return JsonResponse({'status': 403, 'message': 'Department already exists!'})
-            if department_name:
+                messages.warning(request, 'Department already exists!')
+            elif department_name:
                 library = md.Library.objects.get(name=lb)
                 md.Department.objects.create(name=department_name, library=library)
             else:
-                return JsonResponse({'status': 403, 'message': 'Unable to create department!'})
+                messages.error(request, 'Unable to create department!')
         departments = md.Department.objects.filter(library__name=lb)
         return render(request, 'department.html', {'departments': departments, 'library_name': lb})
     
     if request.method == const.POST:
         library_name = str(request.POST.get('library-name')).strip()
         if not library_name.isalpha():
-            return JsonResponse({'status': 403, 'message': 'Library name must contain only alphabetic characters'})
+            messages.warning(request, 'Library name must contain only alphabetic characters')
         library_name = "LB-" + library_name.upper().replace(' ', '-')
         if md.Library.objects.filter(name=library_name).exists():
             libraries = md.Library.objects.all()
-            return render(request, 'library.html', {'libraries': libraries, 'message': 'Library already exists!'})
-        if library_name:
+            messages.warning('Library already exists!')
+            return render(request, 'library.html', {'libraries': libraries})
+        elif library_name:
             md.Library.objects.create(name=library_name)
         else:
-            return JsonResponse({'status': 403, 'message': 'Unable to create library!'})
+            messages.error(request, 'Unable to create library!')
     libraries = md.Library.objects.all()
     return render(request, 'library.html', {'libraries': libraries})
 
+@admin_required
 def edit_library(request, lb=None, dept=None, rack=None, book=None):
     if lb:
         if dept:
@@ -236,21 +264,23 @@ def edit_library(request, lb=None, dept=None, rack=None, book=None):
                     rack.department = department
                     rack_name = str(request.POST.get('rack-name')).strip()
                     if not rack_name.isalpha():
-                        return JsonResponse({'status': 403, 'message': 'Rack name must contain only alphabetic characters'})
-                    rack_name = "RK-" + rack_name.upper().replace(' ', '-')
+                        messages.warning(request, 'Rack name must contain only alphabetic characters')
+                    else:
+                        rack_name = "RK-" + rack_name.upper().replace(' ', '-')
                     if md.Rack.objects.filter(department__library__name=lb, department__name=dept, name=rack_name).exists():
-                        return JsonResponse({'status': 403, 'message': 'Rack already exists!'})
-                    if rack_name:
+                        messages.warning(request, 'Rack already exists!')
+                    elif rack_name:
                         rack.name = rack_name
                         rack.save()
                         return redirect(f'/library/{library.name}/{department.name}/{rack.name}')
                     else:
-                        return JsonResponse({'status': 403, 'message': 'Unable to create rack!'})
+                        messages.error(request, 'Unable to create rack!')
                 return render(request, 'edit-rack.html')
             return render(request, 'edit-department.html')
         return render(request, 'edit-library.html')
     return redirect('/')
 
+@admin_required
 def library_meta(request):
     # Build a list of libraries, each with id, name, and departments
     libraries = []
@@ -282,6 +312,7 @@ def library_meta(request):
     library_dict = {'libraries': libraries}
     return JsonResponse(library_dict)
 
+@admin_required
 def books(request):
     if request.method == const.POST:
         book_name = str(request.POST.get('book-name')).strip()
@@ -334,21 +365,26 @@ def view_book(request, book_id):
         raise Http404("Book not found")
 
 def racks(request):
+    racks = md.Rack.objects.all()
+    depts = md.Department.objects.all()
+    return_data = render(request, 'racks.html', {'racks': racks, 'departments': depts})
     if request.method == const.POST:
         rack_name = str(request.POST.get('rack-name')).strip()
         if not rack_name.isalpha():
-            return JsonResponse({'status': 403, 'message': 'Rack name must contain only alphabetic characters'})
+            messages.error(request, 'Rack name must contain only alphabetic characters')
+            return return_data
         rack_name = "RK-" + rack_name.upper().replace(' ', '-')
         if md.Rack.objects.filter(name=rack_name).exists():
-            return JsonResponse({'status': 403, 'message': 'Rack already exists!'})
+            messages.error(request, 'Rack already exists!')
+            return return_data
         if rack_name:
             department = md.Department.objects.get(id=request.POST.get('department'))
             md.Rack.objects.create(name=rack_name, department=department)
+            return return_data
         else:
-            return JsonResponse({'status': 403, 'message': 'Unable to create rack!'})
-    racks = md.Rack.objects.all()
-    depts = md.Department.objects.all()
-    return render(request, 'racks.html', {'racks': racks, 'departments': depts})
+            messages.error(request, 'Unable to create rack!')
+            return return_data
+    return return_data
 
 @login_required
 def download_file(request, file_id):
@@ -361,23 +397,98 @@ def download_file(request, file_id):
         raise Http404("File not found")
 
 @login_required
+@admin_required
 def delete(request, lb=None, dept=None, rack=None, book=None):
     if lb:
         if dept:
             if rack:
                 if book:
                     md.Book.objects.filter(id=book).delete()
+                    messages.info(request, "Book successfully deleted")
                     return redirect(f'/library/{lb}/{dept}/{rack}')
                 else:
                     md.Rack.objects.filter(name=rack).delete()
+                    messages.info(request, "Rack successfully deleted")
                     return redirect(f'/library/{lb}/{dept}')
             else:
                 md.Department.objects.filter(name=dept).delete()
+                messages.info(request, "Department successfully deleted")
                 return redirect(f'/library/{lb}')
         else:
             md.Library.objects.filter(name=lb).delete()
+            messages.info(request, "Library successfully deleted")
             return redirect(f'/library')
     return redirect('library')
+
+# Students
+
+def student_detail(request, student_id):
+    student = md.User.objects.filter(id=student_id)
+    return render(request, 'student.html', {'student': student})
+
+@admin_required
+def students(request):
+    students = md.User.objects.filter(groups__name='student')
+    return render(request, 'students.html', {'students': students})
+
+@login_required
+@admin_required
+def approve_student(request, stu_id):
+    user = md.User.objects.get(id=stu_id)
+    if user:
+        user.is_staff = True
+        user.save()
+        messages.success(request, f'Student {user.username} approved')
+        return redirect('/students')
+    else:
+        messages.error(request, 'Student not found!')
+        return redirect('/students')
+
+@login_required
+@admin_required
+def disable_student(request, stu_id):
+    user = md.User.objects.get(id=stu_id)
+    if user:
+        user.is_staff = False
+        user.save()
+        messages.success(request, f'Student {user.username} disabled')
+        return redirect('/students')
+    else:
+        messages.error(request, 'Student not found!')
+        return redirect('/students')
+
+@login_required
+@admin_required
+def delete_student(request, stu_id):
+    user = md.User.objects.get(id=stu_id)
+    if user:
+        name = user.username.capitalize()
+        user.delete()
+        messages.success(request, f"Student {name} deleted Successfully")
+        return redirect('/students')
+    else:
+        messages.warning(request, 'Student not found!')
+        return redirect('/students')
+
+# ledger
+def ledger(request):
+    ledger = md.Ledger.objects.all()
+    students = md.User.objects.filter(groups__name='student')
+    return render(request, 'ledger.html', {'ledger': ledger, 'students': students})
+
+def add_book_ledger_entry(request):
+    student = request.POST.get('student')
+    isbn = request.POST.get('isbn')
+    checkout_date = request.POST.get('checkout-date')
+    checkin_date = request.POST.get('checkin-date')
+    md.Ledger.objects.create(
+        user_id=student,
+        isbn=isbn,
+        checkout_date=checkout_date,
+        checkin_date=checkin_date,
+        is_pending=True,
+    )
+    return redirect('/ledger')
 
 # auth units
 @login_required
@@ -407,13 +518,18 @@ def update_profile(request):
 def signup(request):
     if request.method == 'POST':
         username = request.POST["username"]
+        first_name = request.POST["first_name"]
+        last_name = request.POST["last_name"]
         email = request.POST["email"]
         password = request.POST["password"]
         if username and email and password:
             if not User.objects.filter(username=username).exists() and not User.objects.filter(email=email).exists():
-                user = User.objects.create_user(username, email, password)
+                user = User.objects.create_user(username, email, password, first_name=first_name, last_name=last_name)
+                user.is_staff = False
+                student_group = Group.objects.get(name='student')
+                user.groups.add(student_group)
                 user.save()
-                messages.success(request, 'Account created successfully')
+                messages.success(request, 'User created successfully')
                 return redirect('signin')
             else:
                 messages.error(request, 'Username or Email already exists')
@@ -423,13 +539,28 @@ def signup(request):
     return render(request,'signup.html')
 
 def signin(request):
+    if request.user.is_authenticated:
+        if request.user.groups.filter(name='student').exists():
+            return redirect('/student')
+        return redirect('dashboard')
     if request.method == 'POST':
         username = request.POST["username"]
         password = request.POST["password"]
+        if "@" in username:
+            user_obj = User.objects.get(email=username)
+            if user_obj:
+                username = user_obj.username
+            else:
+                messages.error(request, 'User not found!')
+                return redirect('/signin')
         user = authenticate(request, username=username, password=password)
         if user is not None:
-            login(request, user)
-            return redirect('dashboard')
+            if user.is_staff:
+                login(request, user)
+                return redirect('dashboard')
+            else:
+                messages.warning(request, 'Student needs to be approved')
+                return redirect('/signin')
         else:
             messages.error(request, 'Invalid credentials Please try again')
     return render(request,'signin.html')

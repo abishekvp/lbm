@@ -43,9 +43,19 @@ urlpatterns = [
     path('delete/<str:lb>/<str:dept>', views.delete),
     path('delete/<str:lb>/<str:dept>/<str:rack>', views.delete),
     path('delete/<str:lb>/<str:dept>/<str:rack>/<int:book>', views.delete),
+
+    # students
+    path('students', views.students),
+    path('student-detail/<int:student_id>', views.student_detail),
+    path('approve-student/<int:stu_id>', views.approve_student),
+    path('disable-student/<int:stu_id>', views.disable_student),
+    path('delete-student/<int:stu_id>', views.delete_student),
+
+    # ledger
+    path('ledger', views.ledger),
+    path('add-book-ledger-entry', views.add_book_ledger_entry),
     
     # pages
-    path('index', views.index, name='index'),
     path('ui_typography', views.ui_typography, name='ui_typography'),
     path('ui_colors', views.ui_colors, name='ui_colors'),
     path('ui_fontawesome', views.ui_fontawesome, name='ui_fontawesome'),

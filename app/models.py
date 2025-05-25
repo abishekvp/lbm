@@ -22,7 +22,8 @@ class Stock(models.Model):
 
 class Ledger(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    book = models.ForeignKey(Stock, on_delete=models.CASCADE)
+    book = models.ForeignKey(Stock, on_delete=models.CASCADE, null=True, blank=True)
+    isbn = models.CharField(max_length=126, null=True)
     checkout_date = models.DateTimeField(auto_now_add=True)
     approved_date = models.DateTimeField(null=True)
     rejected_date = models.DateTimeField(null=True)
@@ -32,6 +33,16 @@ class Ledger(models.Model):
     is_approved = models.BooleanField(default=False)
     is_rejected = models.BooleanField(default=False)
     is_pending = models.BooleanField(default=True)
+
+class log(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    book = models.ForeignKey(Stock, on_delete=models.CASCADE)
+    checkout_date = models.DateTimeField(auto_now_add=True)
+    approved_date = models.DateTimeField(null=True)
+    rejected_date = models.DateTimeField(null=True)
+    checkin_date = models.DateTimeField(null=True)
+    is_approved = models.BooleanField(default=False)
+    is_rejected = models.BooleanField(default=False)
 
 class Library(models.Model):
     name = models.CharField(max_length=64)

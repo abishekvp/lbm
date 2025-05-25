@@ -1,15 +1,33 @@
 function notify(code, message) {
+    var position = "toast-top-center";
+    if (window.location.pathname === "/sign" || window.location.pathname === "/signup") {
+        position = "toast-top-right";
+    }
+    var position = "toast-top-center";
     toastr.options = {
+        "closeButton": true,
+        "debug": false,
         "progressBar": true,
-        "positionClass": "toast-top-center"
-    };
-
+        "preventDuplicates": true,
+        "positionClass": position,
+        "onclick": null,
+        "showDuration": "400",
+        "hideDuration": "1000",
+        "timeOut": "7000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "slideDown",
+        "hideMethod": "slideUp"
+    }
     if (code === 200) {
-        toastr.success(message);
-    } else if (code === 403) {
-        toastr.warning(message);
+        toastr.success("", message);
+    } else if (code === 407) {
+        toastr.warning("", message);
+    } else if (code === 500){
+        toastr.error("", message);
     } else {
-        toastr.info(message);
+        toastr.info("", message);
     }
 }
 
@@ -174,42 +192,15 @@ function addDepartment() {
     });
 }
 
-function addRack() {
-        $.ajax({
-        type: "POST",
-        url: "/add-rack",
-        data: {
-            rack_name: $('#rack-name').val(),
-            csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
-        },
-        success: function (response) {
-            if (response.status && response.message){
-                notify(response.status, response.message)
-            }
-        },
-        error: function (error) {
-            notify(500, error);
-        }
-    });
+function notify_info(message) {
+    notify(null, message);
 }
-
-function test() {
-    alert("ok")
-    toastr.options = {
-  "closeButton": true,
-  "debug": false,
-  "progressBar": true,
-  "preventDuplicates": false,
-  "positionClass": "toast-top-right",
-  "onclick": null,
-  "showDuration": "400",
-  "hideDuration": "1000",
-  "timeOut": "7000",
-  "extendedTimeOut": "1000",
-  "showEasing": "swing",
-  "hideEasing": "linear",
-  "showMethod": "fadeIn",
-  "hideMethod": "fadeOut"
+function notify_success(message) {
+    notify(200, message);
 }
-toastr.info("YeAAA");
+function notify_warning(message) {
+    notify(407, message);
+}
+function notify_error(message) {
+    notify(500, message);
 }
