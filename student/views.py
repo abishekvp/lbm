@@ -15,7 +15,8 @@ from django.http import JsonResponse
 
 @login_required
 def index(request):
-    return render(request, 'student/ledger.html')
+    ledger = md.Ledger.objects.filter(user=request.user)
+    return render(request, 'student/ledger.html', {'ledger': ledger})
 
 
 def books(request):
