@@ -1,4 +1,4 @@
-{% extends 'index.html' %}
+{% extends 'student/student_index.html' %}
 {% load static %}
 {% block title %}
 Dashboard
@@ -15,26 +15,11 @@ Dashboard
                     <li class="breadcrumb-item"><a href="/library/{{library_name}}"> {{library_name}}</a></li>
                     <li class="breadcrumb-item"><a href="/library/{{library_name}}/{{department_name}}"> {{department_name}}</a></li>
                 </ol>
-                <div>
-                    <a href="/edit-library/{{library_name}}/{{department_name}}"><button type="button" class="btn btn-flat mb-1 btn-outline-info"><i class="fas fa-pencil-square-o"></i> Edit</button></a>
-                    <a href="/delete/{{library_name}}/{{department_name}}"><button type="button" class="btn btn-flat mb-1 btn-outline-danger"><i class="ti-trash"></i> Delete</button></a>
-                </div>
             </div>
         </div>
         <!-- EOF Breadcrumb -->
 
         <div class="row">
-            <div type="button" class="col-md-3 col-sm-6" data-toggle="modal" data-target="#addRackModal">
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <div class="number-left">
-                            <h6 class="bold">Add Rack</h6>
-                            <!-- <h3 class="card-title bold text-success"><i class=""></i>{{library.book_count}}</h3> -->
-                        </div>
-                        <div class="icon-right"><i class="fa fa-plus"></i></i></div>
-                    </div>
-                </div>
-            </div>
             {% for rack in racks %}
             <a class="col-md-3 col-sm-6" href="/library/{{library_name}}/{{department_name}}/{{rack.name}}">
                 <div class="card mb-3">

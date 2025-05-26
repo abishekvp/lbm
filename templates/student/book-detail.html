@@ -1,4 +1,4 @@
-{% extends 'index.html' %}
+{% extends 'student/student_index.html' %}
 {% load static %}
 {% block title %}
 Dashboard
@@ -32,7 +32,6 @@ Dashboard
                     <li class="breadcrumb-item"><a href="/library/{{book.rack.department.library.name}}/{{book.rack.department.name}}"> {{book.rack.department.name}}</a></li>
                     <li class="breadcrumb-item"><a href="/library/{{book.rack.department.library.name}}/{{book.rack.department.name}}/{{book.rack.name}}"> {{book.rack.name}}</a></li>
                 </ol>
-                <a href="/delete/{{library_name}}/{{department_name}}/{{rack_name}}/{{book.id}}"><button type="button" class="btn btn-flat mb-1 btn-outline-danger"><i class="ti-trash"></i> Delete</button></a>
             </div>
         </div>
         <!-- EOF Breadcrumb -->
@@ -205,17 +204,7 @@ Dashboard
                                 </div>
                                 <span class="form-control">{{ book.updated }}</span>
                             </div>
-                            <div class="mt-3 d-flex justify-content-center align-items-center">
-                                <button type="submit" class="btn btn-flat mb-1 btn-outline-primary"><i class="fas fa-refresh"></i> Update</button>
-                            </div>
                         </form>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-flex justify-content-around">
-                            <button type="button" onclick="edit()" class="btn btn-flat mb-1 btn-outline-primary"><i class="ti-pencil"></i> Edit</button>
-                            <a href="/delete/{{library_name}}/{{department_name}}/{{rack_name}}/{{book.id}}"><button type="button" class="btn btn-flat mb-1 btn-outline-danger"><i class="ti-trash"></i> Delete</button></a>
-                            <a href="{% url 'download-file' book.file.id %}"><button type="button" class="btn btn-flat mb-1 btn-outline-info"><i class="ti-import"></i> Book</button></a>
-                        </div>
                     </div>
                 </div>
             </div>
