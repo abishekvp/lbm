@@ -1,0 +1,38 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block title %}
+Dashboard
+{% endblock %}
+{% block main %}
+    <!-- BOF MAIN -->
+    <div class="main">
+
+        <!-- BOF Breadcrumb -->
+        <div class="row">
+            <div class="col  d-flex justify-content-between">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/library"><i class="ti-home"></i> Library</a></li>
+                    <li class="breadcrumb-item"><a href="/library/{{library_name}}"> {{library_name}}</a></li>
+                </ol>
+            </div>
+        </div>
+        <!-- EOF Breadcrumb -->
+
+        <div class="row">
+            {% for department in departments %}
+            <a class="col-md-3 col-sm-6" href="/library/{{library_name}}/{{department.name}}">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="number-left">
+                            <h6 class="bold">{{department.name}}</h6>
+                            <h3 class="card-title bold text-success"><i class=""></i>{{department.book_count}}</h3>
+                        </div>
+                        <div class="icon-right"><i class="fas fa-building"></i></div>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    <!-- EOF MAIN -->
+{% endblock %}
