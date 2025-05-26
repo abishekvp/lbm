@@ -11,10 +11,10 @@ Dashboard
         <div class="row">
             <div class="col  d-flex justify-content-between">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="/library"><i class="ti-home"></i> Library</a></li>
-                    <li class="breadcrumb-item"><a href="/library/{{library_name}}"> {{library_name}}</a></li>
-                    <li class="breadcrumb-item"><a href="/library/{{library_name}}/{{department_name}}"> {{department_name}}</a></li>
-                    <li class="breadcrumb-item"><a href="/library/{{library_name}}/{{department_name}}/{{rack_name}}"> {{rack_name}}</a></li>
+                    <li class="breadcrumb-item"><a href="/student/library"><i class="ti-home"></i> Library</a></li>
+                    <li class="breadcrumb-item"><a href="/student/library/{{library_name}}"> {{library_name}}</a></li>
+                    <li class="breadcrumb-item"><a href="/student/library/{{library_name}}/{{department_name}}"> {{department_name}}</a></li>
+                    <li class="breadcrumb-item"><a href="/student/library/{{library_name}}/{{department_name}}/{{rack_name}}"> {{rack_name}}</a></li>
                 </ol>
             </div>
         </div>
@@ -22,7 +22,7 @@ Dashboard
 
         <div class="row">
             {% for book in books %}
-            <a class="col-md-3 col-sm-6" href="/library/{{library_name}}/{{department_name}}/{{rack_name}}/{{book.id}}">
+            <a class="col-md-3 col-sm-6" href="/student/library/{{library_name}}/{{department_name}}/{{rack_name}}/{{book.id}}">
                 <div class="card mb-3">
                     <div class="card-body">
                         <div class="number-left">
