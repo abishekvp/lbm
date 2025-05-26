@@ -35,31 +35,63 @@ Dashboard
                             <table class="table table-bordered table-hover init-datatable" id="">
                                 <thead class="thead-light">
                                     <tr>
-                                        <th>Name</th>
-                                        <th>CheckOut Date</th>
-                                        <th>CheckIn Date</th>
-                                        <th>Action</th>
+                                        <th>Student</th>
+                                        <th>Roll No</th>
+                                        <th>ISBN</th>
+                                        <th>Check-Out Date</th>
+                                        <th>Check-In Date</th>
+                                        <th>Status</th>
+                                        <th>Check Status</th>
+                                        <th>Is Overdue</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {% for log in ledger %}
-                                    <tr class="{% if log.is_approved %}bg-carolina text-white{% endif %}">
+                                    <tr>
                                         <td><a href="/student-detail/{{log.user.id}}">{{ log.user.username|capfirst }}</a></td>
+                                        <td>{{ log.roll_no }}</td>
+                                        <td>{{ log.isbn }}</td>
                                         <td>{{ log.checkout_date }}</td>
                                         <td>{{ log.checkin_date }}</td>
-                                        <td class="d-flex justify-content-around">
+                                        <td class="text-center">
                                             {% if log.is_pending  %}
-                                            <a href="/reject-book-request/{{log.id}}" class="btn btn-sm btn-danger" title="Reject">
-                                                <i class="ti-na"></i>
-                                            </a>
                                             <a href="/approve-book-request/{{log.id}}" class="btn btn-sm btn-success" title="Approve">
-                                                <i class="ti-check"></i>
+                                                <i class="ti-check"></i> Approve
                                             </a>
-                                            {% if log.is_approved %}
-                                            <span class="btn btn-sm btn-danger" title="Reject">
-                                                <i class="ti-check"></i>
-                                            </span>
+                                            <a href="/reject-book-request/{{log.id}}" class="btn btn-sm btn-danger" title="Reject">
+                                                <i class="ti-na"></i> Reject
+                                            </a>
+                                            {% elif log.is_approved %}
+                                            <span class="badge badge-success">Approved</span>
+                                            {% elif log.is_rejected %}
+                                            <span class="badge badge-danger">Rejected</span>
                                             {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if log.is_checked_out %}
+                                                {% if log.is_checked_in %}
+                                                <span class="badge badge-info">Checked In</span>
+                                                {% else %}
+                                                <span class="badge badge-success">Checked Out</span>
+                                                <a href="/check-in-book/{{log.id}}" class="btn btn-sm btn-info" title="Check In">
+                                                    <i class="ti-check"></i> Check In
+                                                </a>
+                                                {% endif %}
+                                            {% elif log.is_approved %}
+                                            <a href="/check-out-book/{{log.id}}" class="btn btn-sm btn-primary" title="Check Out">
+                                                <i class="ti-check"></i> Check Out
+                                            </a>
+                                            {% elif log.is_rejected %}
+                                            <span class="badge badge-danger">Rejected</span>
+                                            {% elif log.is_pending %}
+                                            <span class="badge badge-warning">Pending</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if log.is_overdue %}
+                                            <span class="badge badge-danger">Overdue</span>
+                                            {% else %}
+                                            <span class="badge badge-success">Not Overdue</span>
                                             {% endif %}
                                         </td>
                                     </tr>

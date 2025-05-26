@@ -214,8 +214,10 @@ def request_book(request):
     checkin_date = request.POST.get('checkin-date')
     book_obj = md.Stock.objects.filter(isbn=isbn)
     book = dict()
+    profile = md.Profile.objects.get(user=request.user)
     book['user'] = request.user
     book['isbn'] = isbn
+    book['roll_no'] = profile.roll
     book['checkout_date'] = checkout_date
     book['checkin_date'] = checkin_date
     book['is_pending'] = True

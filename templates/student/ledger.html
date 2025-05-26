@@ -24,7 +24,7 @@ Dashboard
                 <div class="card mb-3">
                     <div class="card-header">
                         <div class="caption uppercase">
-                            <i class="ti-briefcase"></i> Books Circulation Ledger
+                            <i class="ti-briefcase"></i> Ledger of Books
                         </div>
                         <div class="tools">
                             <button data-toggle="modal" data-target="#requestBookModal" aria-labelledby="requestBookModalTitle" class="btn btn-sm btn-primary"><i class="ti-file"></i> Request Book</button>
@@ -35,13 +35,11 @@ Dashboard
                             <table class="table table-bordered table-hover init-datatable" id="">
                                 <thead class="thead-light">
                                     <tr>
-                                        <tr>
-                                            <th colspan="4" class="text-center">Date</th>
-                                        </tr>
-                                        <th>Checkout</th>
-                                        <th>Checkin</th>
-                                        <th>Approved</th>
-                                        <th>Rejected</th>
+                                        <th>ISBN</th>
+                                        <th>CheckOut Date</th>
+                                        <th>CheckIn Date</th>
+                                        <th>Approve Date</th>
+                                        <th>Rejecte Date</th>
                                         <th>Check Out</th>
                                         <th>Check In</th>
                                         <th>Status</th>
@@ -51,33 +49,40 @@ Dashboard
                                 <tbody>
                                     {% for log in ledger %}
                                     <tr class="{% if log.is_approved %}bg-carolina text-white{% endif %}">
+                                        <td>{{ log.isbn }}</td>
                                         <td>{{ log.checkout_date }}</td>
                                         <td>{{ log.checkin_date }}</td>
                                         <td>
                                             {% if log.approved_date %}
                                             {{ log.approved_date }}
-                                            {% else %}
-                                            Pending
+                                            {% elif log.is_rejected %}
+                                            <span class="badge badge-danger">Rejected</span>
+                                            {% elif log.is_pending %}
+                                            <span class="badge badge-warning">Pending</span>
                                             {% endif %}
                                         </td>
                                         <td>
                                             {% if log.rejected_date %}
                                             {{ log.rejected_date }}
-                                            {% else %}
-                                            Pending
+                                            {% elif log.is_approved %}
+                                            <span class="badge badge-success">Approved</span>
+                                            {% elif log.is_pending %}
+                                            <span class="badge badge-warning">Pending</span>
                                             {% endif %}
                                         </td>
                                         <td>
                                             {% if log.is_checked_out %}
-                                            Checked Out
+                                            <span class="badge badge-success">Checked Out</span>
+                                            {% elif log.is_pending %}
+                                            <span class="badge badge-warning">Pending</span>
                                             {% else %}
-                                            Waiting
+                                            <span class="badge badge-danger">Not Checked Out</span>
                                             {% endif %}
                                         </td>
                                         <td>
                                             {% if log.is_checked_in %}
-                                            Checked Out
-                                            {% else %}
+                                            <span class="badge badge-success">Checked In</span>
+                                            {% elif log.is_pending %}
                                             Waiting
                                             {% endif %}
                                         </td>

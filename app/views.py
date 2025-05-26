@@ -468,8 +468,16 @@ def delete(request, lb=None, dept=None, rack=None, book=None):
 # Students
 
 def student_detail(request, student_id):
-    student = md.User.objects.filter(id=student_id)
-    return render(request, 'student.html', {'student': student})
+    student = dict()
+    student_data = md.User.objects.get(id=student_id)
+    profile = md.Profile.objects.get(user=student_data)
+    student['username'] = student_data.username
+    student['first_name'] = student_data.first_name
+    student['last_name'] = student_data.last_name
+    student['email'] = student_data.email
+    student['mobile_no'] = profile.phone
+    student['roll_no'] = profile.roll
+    return render(request, 'student.html', {**student})
 
 @admin_required
 def students(request):
@@ -517,18 +525,20 @@ def delete_student(request, stu_id):
 
 # ledger
 def ledger(request):
-    ledger = md.Ledger.objects.filter(is_pending=True)
+    ledger = md.Ledger.objects.filter()
     students = md.User.objects.filter(groups__name='student')
     return render(request, 'ledger.html', {'ledger': ledger, 'students': students})
 
 def add_book_ledger_entry(request):
     student = request.POST.get('student')
     isbn = request.POST.get('isbn')
+    roll = request.POST.get('roll-no')
     checkout_date = request.POST.get('checkout-date')
     checkin_date = request.POST.get('checkin-date')
     md.Ledger.objects.create(
         user_id=student,
         isbn=isbn,
+        roll_no=roll,
         checkout_date=checkout_date,
         checkin_date=checkin_date,
         is_pending=True,
@@ -541,11 +551,11 @@ def overdue(request):
     return render(request, 'overdue.html', {'logs': logs})
 
 def approved(request):
-    logs = md.Ledger.objects.filter(is_approved=True)
+    logs = md.Ledger.objects.filter(is_approved=True, is_pending=False, is_checked_in=False, is_checked_out=False)
     return render(request, 'approved.html', {'logs': logs})
 
 def checked_out(request):
-    logs = md.Ledger.objects.filter(is_checked_out=True)
+    logs = md.Ledger.objects.filter(is_checked_out=True, is_checked_in=False)
     return render(request, 'checked-out.html', {'logs': logs})
 
 # auth units
@@ -579,6 +589,8 @@ def signup(request):
         first_name = request.POST["first_name"]
         last_name = request.POST["last_name"]
         email = request.POST["email"]
+        mobile_no = request.POST["mobile-no"]
+        roll_no = request.POST["roll-no"]
         password = request.POST["password"]
         if username and email and password:
             if not User.objects.filter(username=username).exists() and not User.objects.filter(email=email).exists():
@@ -587,6 +599,12 @@ def signup(request):
                 student_group = Group.objects.get(name='student')
                 user.groups.add(student_group)
                 user.save()
+                profile = md.Profile.objects.create(
+                    user=user,
+                    email=email,
+                    phone=mobile_no,
+                    roll=roll_no,
+                )
                 messages.success(request, 'User created successfully')
                 return redirect('signin')
             else:
