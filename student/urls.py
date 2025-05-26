@@ -23,5 +23,7 @@ urlpatterns = [
     path('books', views.books),
     path('view-book/<int:book_id>', views.view_book),
 
+    path('request-book', views.request_book),
+
     path('racks', views.racks),
 ]

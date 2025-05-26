@@ -24,10 +24,10 @@ Dashboard
                 <div class="card mb-3">
                     <div class="card-header">
                         <div class="caption uppercase">
-                            <i class="ti-briefcase"></i> Basic Datatable
+                            <i class="ti-briefcase"></i> Books Circulation Ledger
                         </div>
                         <div class="tools">
-                            <button data-toggle="modal" data-target="#addLedgerEntryModal" aria-labelledby="addLibraryModalTitle" class="btn btn-sm btn-primary"><i class="ti-file"></i> Request Book</button>
+                            <button data-toggle="modal" data-target="#requestBookModal" aria-labelledby="requestBookModalTitle" class="btn btn-sm btn-primary"><i class="ti-file"></i> Request Book</button>
                         </div>
                     </div>
                     <div class="card-body">
@@ -36,23 +36,21 @@ Dashboard
                                 <thead class="thead-light">
                                     <tr>
                                         <tr>
-                                            <th class="bg-transparent border-0"></th>
                                             <th colspan="4" class="text-center">Date</th>
                                         </tr>
-                                        <th>Name</th>
                                         <th>Checkout</th>
                                         <th>Checkin</th>
                                         <th>Approved</th>
                                         <th>Rejected</th>
-                                        <th>Check (Out/In)</th>
+                                        <th>Check Out</th>
+                                        <th>Check In</th>
                                         <th>Status</th>
-                                        <th>Action</th>
+                                        <th>Overdue</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {% for log in ledger %}
                                     <tr class="{% if log.is_approved %}bg-carolina text-white{% endif %}">
-                                        <td>{{ log.user.username|capfirst }}</td>
                                         <td>{{ log.checkout_date }}</td>
                                         <td>{{ log.checkin_date }}</td>
                                         <td>
@@ -72,10 +70,15 @@ Dashboard
                                         <td>
                                             {% if log.is_checked_out %}
                                             Checked Out
-                                            {% elif log.is_checked_in %}
-                                            Checked In
                                             {% else %}
-                                            No Status
+                                            Waiting
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if log.is_checked_in %}
+                                            Checked Out
+                                            {% else %}
+                                            Waiting
                                             {% endif %}
                                         </td>
                                         <td>
@@ -90,15 +93,10 @@ Dashboard
                                             {% endif %}
                                         </td>
                                         <td>
-                                            {% if log.is_pending  %}
-                                            <a href="/disable-student/{{student.id}}" class="btn btn-sm btn-danger" title="Reject">
-                                                <i class="ti-na"></i>
-                                            </a>
-                                            {% if log.is_approved %}
-                                            <a href="/approve-student/{{student.id}}" class="btn btn-sm btn-success" title="Approve">
-                                                <i class="ti-check"></i>
-                                            </a>
-                                            {% endif %}
+                                            {% if log.is_overdue %}
+                                            <span class="badge badge-danger">Overdue</span>
+                                            {% else %}
+                                            <span class="badge badge-success">On Time</span>
                                             {% endif %}
                                         </td>
                                     </tr>

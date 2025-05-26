@@ -223,6 +223,51 @@ def library(request, lb=None, dept=None, rack=None, book=None):
     libraries = md.Library.objects.all()
     return render(request, 'library.html', {'libraries': libraries})
 
+# book
+@admin_required
+def reject_book_request(request, request_id):
+    book_req = md.Ledger.objects.get(id=request_id)
+    book_req.is_rejected = True
+    book_req.is_approved = False
+    book_req.is_pending = False
+    book_req.is_checked_in = False
+    book_req.is_checked_out = False
+    date_now = timezone.now().date()
+    book_req.rejected_date = date_now
+    book_req.save()
+    return redirect('/ledger')
+
+@admin_required
+def approve_book_request(request, request_id):
+    book_req = md.Ledger.objects.get(id=request_id)
+    book_req.is_rejected = False
+    book_req.is_approved = True
+    book_req.is_pending = False
+    book_req.is_checked_in = False
+    book_req.is_checked_out = False
+    date_now = timezone.now().date()
+    book_req.approved_date = date_now
+    book_req.save()
+    return redirect('/ledger')
+
+def check_out_book(request, request_id):
+    book_req = md.Ledger.objects.get(id=request_id)
+    book_req.is_checked_in = False
+    book_req.is_checked_out = True
+    date_now = timezone.now().date()
+    book_req.checkout_date = date_now
+    book_req.save()
+    return redirect('/ledger')
+
+def check_in_book(request, request_id):
+    book_req = md.Ledger.objects.get(id=request_id)
+    book_req.is_checked_in = True
+    book_req.is_checked_out = True
+    date_now = timezone.now().date()
+    book_req.checkin_date = date_now
+    book_req.save()
+    return redirect('/ledger')
+
 @admin_required
 def edit_library(request, lb=None, dept=None, rack=None, book=None):
     if lb:
@@ -472,7 +517,7 @@ def delete_student(request, stu_id):
 
 # ledger
 def ledger(request):
-    ledger = md.Ledger.objects.all()
+    ledger = md.Ledger.objects.filter(is_pending=True)
     students = md.User.objects.filter(groups__name='student')
     return render(request, 'ledger.html', {'ledger': ledger, 'students': students})
 
@@ -489,6 +534,19 @@ def add_book_ledger_entry(request):
         is_pending=True,
     )
     return redirect('/ledger')
+
+def overdue(request):
+    today = timezone.now().date()
+    logs = md.Ledger.objects.filter(checkin_date__lt=today, is_checked_in=False)
+    return render(request, 'overdue.html', {'logs': logs})
+
+def approved(request):
+    logs = md.Ledger.objects.filter(is_approved=True)
+    return render(request, 'approved.html', {'logs': logs})
+
+def checked_out(request):
+    logs = md.Ledger.objects.filter(is_checked_out=True)
+    return render(request, 'checked-out.html', {'logs': logs})
 
 # auth units
 @login_required
@@ -564,6 +622,10 @@ def signin(request):
         else:
             messages.error(request, 'Invalid credentials Please try again')
     return render(request,'signin.html')
+
+def circulation_log(request):
+    logs = md.Ledger.objects.filter(is_pending=False)
+    return render(request, 'circulation-log.html', {'logs': logs})
 
 def signout(request):
     if request.user.is_authenticated: logout(request)

@@ -51,9 +51,19 @@ urlpatterns = [
     path('disable-student/<int:stu_id>', views.disable_student),
     path('delete-student/<int:stu_id>', views.delete_student),
 
+    # book
+    path('reject-book-request/<int:request_id>', views.reject_book_request),
+    path('approve-book-request/<int:request_id>', views.approve_book_request),
+    path('check-out-book/<int:request_id>', views.check_out_book),
+    path('check-in-book/<int:request_id>', views.check_in_book),
+
     # ledger
     path('ledger', views.ledger),
+    path('circulation-log', views.circulation_log),
     path('add-book-ledger-entry', views.add_book_ledger_entry),
+    path('overdue', views.overdue),
+    path('approved', views.approved),
+    path('checked-out', views.checked_out),
     
     # pages
     path('ui_typography', views.ui_typography, name='ui_typography'),

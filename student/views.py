@@ -31,10 +31,8 @@ def student_required(view_func):
     return _wrapped_view
 
 def ledger(request):
-    print("req")
     ledger = md.Ledger.objects.filter(user=request.user)
     return render(request, 'student/ledger.html', {'ledger': ledger})
-
 
 @login_required
 def library(request, lb=None, dept=None, rack=None, book=None):
@@ -311,3 +309,22 @@ def books(request):
     depts = md.Department.objects.all()
     racks = md.Rack.objects.all()
     return render(request, 'student/books.html', {'books': books, 'libraries': lbs, 'departments': depts, 'racks': racks})
+
+
+def request_book(request):
+    isbn = request.POST.get('isbn')
+    checkout_date = request.POST.get('checkout-date')
+    checkin_date = request.POST.get('checkin-date')
+    book_obj = md.Stock.objects.filter(isbn=isbn)
+    book = dict()
+    book['user'] = request.user
+    book['isbn'] = isbn
+    book['checkout_date'] = checkout_date
+    book['checkin_date'] = checkin_date
+    book['is_pending'] = True
+    if book_obj:
+        book['book'] = book_obj
+    md.Ledger.objects.create(
+        **book
+    )
+    return redirect('/student/ledger')
